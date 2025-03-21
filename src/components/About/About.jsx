@@ -3,8 +3,8 @@ import { FaDownload } from '@react-icons/all-files/fa/FaDownload';
 import { FaCamera } from '@react-icons/all-files/fa/FaCamera';
 import { FaEdit } from '@react-icons/all-files/fa/FaEdit';
 import { FaVideo } from '@react-icons/all-files/fa/FaVideo';
-import { FaAward } from '@react-icons/all-files/fa/FaAward';
 import { FaStar } from '@react-icons/all-files/fa/FaStar';
+import { FaFilm } from '@react-icons/all-files/fa/FaFilm';
 import './About.css';
 
 const About = () => {
@@ -109,11 +109,40 @@ const About = () => {
                 transition={{ delay: 0.8, duration: 0.6 }}
               >
                 <div className="award-item">
-                  <FaAward /> Best Editor 2022
-                </div>
-                <div className="award-item">
                   <FaStar /> 50+ Projects
                 </div>
+              </motion.div>
+              
+              <motion.div
+                className="about-stats-mobile"
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.8, delay: 0.4, staggerChildren: 0.2 }}
+              >
+                <motion.div 
+                  className="stat-card"
+                  whileHover={{ y: -5, boxShadow: "0 12px 25px rgba(0, 0, 0, 0.3)" }}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: 0.5 }}
+                >
+                  <div className="stat-number">5</div>
+                  <div className="stat-label">Years<br/>Experience</div>
+                </motion.div>
+                
+                <motion.div 
+                  className="stat-card"
+                  whileHover={{ y: -5, boxShadow: "0 12px 25px rgba(0, 0, 0, 0.3)" }}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: 0.7 }}
+                >
+                  <div className="stat-number">50+</div>
+                  <div className="stat-label">Projects<br/>Completed</div>
+                </motion.div>
               </motion.div>
             </div>
           </motion.div>

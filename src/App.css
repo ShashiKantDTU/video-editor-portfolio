@@ -163,71 +163,574 @@ main {
   background-color: var(--dark-bg);
   z-index: 9999;
   flex-direction: column;
+  padding: 0 20px;
+  box-sizing: border-box;
+  text-align: center;
+  background-image: linear-gradient(to bottom, rgba(10, 10, 15, 0.97), rgba(5, 5, 10, 0.99));
+  overflow: hidden;
+}
+
+/* Professional dark vignette for cinematic feel */
+.loader::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(
+    circle at center,
+    transparent 0%,
+    rgba(0, 0, 0, 0.5) 100%
+  );
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* Cinematic frame lines */
+.loader-frame {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.frame-line {
+  position: absolute;
+  background-color: rgba(113, 104, 242, 0.1);
+}
+
+.frame-line-top, .frame-line-bottom {
+  height: 1px;
+  left: 50px;
+  right: 50px;
+}
+
+.frame-line-left, .frame-line-right {
+  width: 1px;
+  top: 50px;
+  bottom: 50px;
+}
+
+.frame-line-top { top: 50px; }
+.frame-line-bottom { bottom: 50px; }
+.frame-line-left { left: 50px; }
+.frame-line-right { right: 50px; }
+
+/* Corner markers for cinematic framing */
+.corner-marker {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.corner-marker::before, .corner-marker::after {
+  content: "";
+  position: absolute;
+  background-color: var(--primary-color);
+}
+
+.corner-marker::before {
+  width: 20px;
+  height: 1px;
+}
+
+.corner-marker::after {
+  width: 1px;
+  height: 20px;
+}
+
+.top-left {
+  top: 50px;
+  left: 50px;
+}
+
+.top-right {
+  top: 50px;
+  right: 50px;
+}
+
+.bottom-left {
+  bottom: 50px;
+  left: 50px;
+}
+
+.bottom-right {
+  bottom: 50px;
+  right: 50px;
+}
+
+.top-left::before, .top-left::after {
+  top: 0;
+  left: 0;
+}
+
+.top-right::before {
+  top: 0;
+  right: 0;
+}
+
+.top-right::after {
+  top: 0;
+  right: 0;
+}
+
+.bottom-left::before {
+  bottom: 0;
+  left: 0;
+}
+
+.bottom-left::after {
+  bottom: 0;
+  left: 0;
+}
+
+.bottom-right::before {
+  bottom: 0;
+  right: 0;
+}
+
+.bottom-right::after {
+  bottom: 0;
+  right: 0;
+}
+
+/* Aperture animation */
+.aperture {
+  position: absolute;
+  width: 100px;
+  height: 100px;
+  z-index: 0;
+  opacity: 0.15;
+  filter: blur(1px);
+}
+
+.aperture-ring {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  border: 1px solid var(--primary-color);
+  box-shadow: 0 0 20px var(--primary-glow);
+  animation: pulseAperture 4s infinite ease-in-out;
+}
+
+@keyframes pulseAperture {
+  0% { transform: scale(0.8); opacity: 0.2; }
+  50% { transform: scale(1.2); opacity: 0.6; }
+  100% { transform: scale(0.8); opacity: 0.2; }
+}
+
+.aperture-blade {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 50%;
+  height: 2px;
+  background-color: var(--primary-color);
+  transform-origin: left center;
+}
+
+.aperture-blade:nth-child(1) { transform: translateY(-50%) rotate(0deg); }
+.aperture-blade:nth-child(2) { transform: translateY(-50%) rotate(60deg); }
+.aperture-blade:nth-child(3) { transform: translateY(-50%) rotate(120deg); }
+.aperture-blade:nth-child(4) { transform: translateY(-50%) rotate(180deg); }
+.aperture-blade:nth-child(5) { transform: translateY(-50%) rotate(240deg); }
+.aperture-blade:nth-child(6) { transform: translateY(-50%) rotate(300deg); }
+
+.aperture-inner {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: var(--primary-color);
+  opacity: 0.3;
+  filter: blur(5px);
+  animation: glowPulse 2s infinite alternate;
+}
+
+@keyframes glowPulse {
+  0% { opacity: 0.3; filter: blur(5px); }
+  100% { opacity: 0.6; filter: blur(10px); }
+}
+
+/* Glowing logo container with enhanced positioning */
+.loader-logo {
+  position: relative;
+  margin-bottom: 40px;
+  z-index: 2;
 }
 
 .loader h1 {
-  font-size: 3rem;
+  font-size: 5rem;
   font-family: var(--font-secondary);
-  letter-spacing: 8px;
-  color: var(--primary-color);
+  letter-spacing: 12px;
+  color: var(--text-color);
   position: relative;
-  text-shadow: 0 0 15px var(--primary-glow);
-  animation: pulse 2s infinite;
-  margin-bottom: 30px;
+  text-shadow: 0 0 20px var(--primary-glow);
+  font-weight: 800;
+  transform-style: preserve-3d;
 }
 
+/* Professional reveal animation */
+.loader h1 span {
+  display: inline-block;
+  animation: revealLetters 0.5s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+.loader h1 span:nth-child(1) { animation-delay: 0.3s; }
+.loader h1 span:nth-child(2) { animation-delay: 0.4s; }
+.loader h1 span:nth-child(3) { animation-delay: 0.5s; }
+
+@keyframes revealLetters {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Editor subtitle with animation */
+.loader h1::after {
+  content: "EDITOR";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 1.4rem;
+  letter-spacing: 16px;
+  font-weight: 300;
+  opacity: 0;
+  text-shadow: 0 0 10px var(--primary-glow);
+  color: var(--primary-color);
+  animation: fadeIn 1s ease-out forwards;
+  animation-delay: 0.8s;
+}
+
+@keyframes fadeIn {
+  to {
+    opacity: 0.85;
+  }
+}
+
+/* Film countdown animation */
+.countdown {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 0;
+  font-family: monospace;
+  z-index: 0;
+  opacity: 0;
+  animation: fadeInOut 6s ease-in-out forwards;
+  animation-delay: 0.2s;
+  color: rgba(113, 104, 242, 0.3);
+  font-weight: 700;
+  pointer-events: none;
+}
+
+@keyframes fadeInOut {
+  0% { opacity: 0; font-size: 0rem; }
+  5% { opacity: 0.8; font-size: 15rem; }
+  10% { opacity: 0; font-size: 20rem; }
+  
+  20% { opacity: 0; font-size: 0rem; }
+  25% { opacity: 0.8; font-size: 15rem; }
+  30% { opacity: 0; font-size: 20rem; }
+  
+  40% { opacity: 0; font-size: 0rem; }
+  45% { opacity: 0.8; font-size: 15rem; }
+  50% { opacity: 0; font-size: 20rem; }
+  
+  60% { opacity: 0; font-size: 0; }
+  65% { opacity: 0.8; font-size: 15rem; }
+  70% { opacity: 0; font-size: 20rem; }
+  
+  100% { opacity: 0; font-size: 0; }
+}
+
+.countdown-number {
+  position: absolute;
+  opacity: 0;
+}
+
+.countdown-number:nth-child(1) {
+  animation: showNumber 6s ease-in-out infinite;
+  animation-delay: 0.2s;
+}
+
+.countdown-number:nth-child(2) {
+  animation: showNumber 6s ease-in-out infinite;
+  animation-delay: 1.7s;
+}
+
+.countdown-number:nth-child(3) {
+  animation: showNumber 6s ease-in-out infinite;
+  animation-delay: 3.2s;
+}
+
+.countdown-number:nth-child(4) {
+  animation: showNumber 6s ease-in-out infinite;
+  animation-delay: 4.7s;
+}
+
+@keyframes showNumber {
+  0%, 15%, 100% { opacity: 0; }
+  5%, 10% { opacity: 1; }
+}
+
+/* Professional progress indicator */
 .loader-progress {
   position: relative;
-  width: 200px;
-  height: 3px;
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 3px;
+  width: 280px;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 6px;
   overflow: hidden;
-  margin-top: 10px;
+  margin-top: 50px;
+  max-width: 90%;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.5) inset;
+  z-index: 2;
+}
+
+.loader-progress::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  background: linear-gradient(90deg, 
+    rgba(113, 104, 242, 0.05),
+    rgba(113, 104, 242, 0.2) 50%,
+    rgba(113, 104, 242, 0.05)
+  );
+  filter: blur(4px);
+  z-index: 0;
 }
 
 .loader-progress::after {
   content: '';
   position: absolute;
   top: 0;
-  left: 0;
+  left: -50%;
   height: 100%;
-  width: 30%;
+  width: 50%;
   background-color: var(--primary-color);
-  border-radius: 3px;
-  animation: loadingProgress 1.5s infinite ease-in-out;
-  box-shadow: 0 0 10px var(--primary-glow);
+  border-radius: 6px;
+  box-shadow: 
+    0 0 15px var(--primary-glow),
+    0 0 30px var(--primary-glow);
+  animation: loadingProgress 3s infinite ease-in-out;
+  z-index: 1;
 }
 
 .loader-progress span {
   position: absolute;
-  top: 10px;
+  top: 15px;
   left: 50%;
   transform: translateX(-50%);
-  font-size: 12px;
-  letter-spacing: 1px;
+  font-size: 11px;
+  letter-spacing: 3px;
   color: rgba(255, 255, 255, 0.6);
   white-space: nowrap;
+  text-transform: uppercase;
+  font-weight: 300;
+}
+
+/* Mobile-specific loader styles */
+@media (max-width: 768px) {
+  .loader h1 {
+    font-size: 3.5rem;
+    letter-spacing: 8px;
+  }
+  
+  .loader h1::after {
+    font-size: 1rem;
+    letter-spacing: 10px;
+  }
+  
+  .loader-progress {
+    width: 80%;
+    max-width: 250px;
+    margin-top: 40px;
+  }
+  
+  .frame-line-top, .frame-line-bottom {
+    left: 30px;
+    right: 30px;
+  }
+  
+  .frame-line-left, .frame-line-right {
+    top: 30px;
+    bottom: 30px;
+  }
+  
+  .frame-line-top { top: 30px; }
+  .frame-line-bottom { bottom: 30px; }
+  .frame-line-left { left: 30px; }
+  .frame-line-right { right: 30px; }
+  
+  .top-left, .top-right, .bottom-left, .bottom-right {
+    width: 15px;
+    height: 15px;
+  }
+  
+  .top-left { top: 30px; left: 30px; }
+  .top-right { top: 30px; right: 30px; }
+  .bottom-left { bottom: 30px; left: 30px; }
+  .bottom-right { bottom: 30px; right: 30px; }
+  
+  .corner-marker::before {
+    width: 15px;
+  }
+  
+  .corner-marker::after {
+    height: 15px;
+  }
+  
+  .countdown {
+    font-size: 0;
+  }
+  
+  @keyframes fadeInOut {
+    0% { opacity: 0; font-size: 0rem; }
+    5% { opacity: 0.8; font-size: 10rem; }
+    10% { opacity: 0; font-size: 12rem; }
+    
+    20% { opacity: 0; font-size: 0rem; }
+    25% { opacity: 0.8; font-size: 10rem; }
+    30% { opacity: 0; font-size: 12rem; }
+    
+    40% { opacity: 0; font-size: 0rem; }
+    45% { opacity: 0.8; font-size: 10rem; }
+    50% { opacity: 0; font-size: 12rem; }
+    
+    60% { opacity: 0; font-size: 0; }
+    65% { opacity: 0.8; font-size: 10rem; }
+    70% { opacity: 0; font-size: 12rem; }
+    
+    100% { opacity: 0; font-size: 0; }
+  }
+  
+  /* Mobile width fix to prevent horizontal overflow */
+  body, html {
+    overflow-x: hidden;
+    width: 100vw;
+    max-width: 100%;
+  }
+  
+  /* Ensure content stays within viewport */
+  .app-container, 
+  .section, 
+  .container {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+    padding-left: 15px;
+    padding-right: 15px;
+    box-sizing: border-box;
+  }
+  
+  /* Force full-width elements to respect container */
+  .hero,
+  .hero-video-container,
+  .background-video,
+  .video-wrapper {
+    width: 100vw;
+    max-width: 100%;
+    left: 0;
+    right: 0;
+  }
+  
+  /* Simpler animations for better performance */
+  .section [class*="animate-"] {
+    animation-duration: 0.5s !important;
+  }
+  
+  /* Simpler box shadows for better performance */
+  .card, .btn, .progress-bar {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2) !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .loader h1 {
+    font-size: 2.5rem;
+    letter-spacing: 6px;
+  }
+  
+  .loader h1::after {
+    font-size: 0.8rem;
+    letter-spacing: 8px;
+  }
+  
+  .loader-progress span {
+    font-size: 9px;
+    letter-spacing: 2px;
+  }
+  
+  .frame-line-top, .frame-line-bottom {
+    left: 20px;
+    right: 20px;
+  }
+  
+  .frame-line-left, .frame-line-right {
+    top: 20px;
+    bottom: 20px;
+  }
+  
+  .frame-line-top { top: 20px; }
+  .frame-line-bottom { bottom: 20px; }
+  .frame-line-left { left: 20px; }
+  .frame-line-right { right: 20px; }
+  
+  .top-left { top: 20px; left: 20px; }
+  .top-right { top: 20px; right: 20px; }
+  .bottom-left { bottom: 20px; left: 20px; }
+  .bottom-right { bottom: 20px; right: 20px; }
+  
+  @keyframes fadeInOut {
+    0% { opacity: 0; font-size: 0rem; }
+    5% { opacity: 0.8; font-size: 8rem; }
+    10% { opacity: 0; font-size: 10rem; }
+    
+    20% { opacity: 0; font-size: 0rem; }
+    25% { opacity: 0.8; font-size: 8rem; }
+    30% { opacity: 0; font-size: 10rem; }
+    
+    40% { opacity: 0; font-size: 0rem; }
+    45% { opacity: 0.8; font-size: 8rem; }
+    50% { opacity: 0; font-size: 10rem; }
+    
+    60% { opacity: 0; font-size: 0; }
+    65% { opacity: 0.8; font-size: 8rem; }
+    70% { opacity: 0; font-size: 10rem; }
+    
+    100% { opacity: 0; font-size: 0; }
+  }
 }
 
 @keyframes loadingProgress {
   0% {
-    left: -30%;
+    left: -50%;
   }
   100% {
     left: 100%;
-  }
-}
-
-@keyframes pulse {
-  0% {
-    text-shadow: 0 0 5px var(--primary-glow);
-  }
-  50% {
-    text-shadow: 0 0 20px var(--primary-glow), 0 0 30px var(--primary-glow);
-  }
-  100% {
-    text-shadow: 0 0 5px var(--primary-glow);
   }
 }
 
@@ -361,10 +864,17 @@ html, body {
 @media (max-width: 768px) {
   html, body {
     cursor: auto;
+    overscroll-behavior: auto; /* Better mobile scrolling behavior */
   }
   
   .cursor-outer, .cursor-dot {
-    display: none;
+    display: none !important; /* Force hide cursor on mobile */
+  }
+  
+  .btn:hover {
+    /* Adjust button hover state for mobile since hover doesn't work the same way */
+    transform: none;
+    box-shadow: 0 4px 12px rgba(113, 104, 242, 0.3);
   }
 }
 
@@ -379,4 +889,49 @@ html, body {
   transform-origin: 0%;
   z-index: 1000;
   box-shadow: 0 0 10px var(--primary-glow);
+}
+
+/* Mobile Animation Optimizations */
+@media (max-width: 768px) {
+  /* Reduce animation durations on mobile */
+  .section * {
+    transition-duration: 0.2s !important;
+  }
+  
+  /* Simplify or disable complex animations */
+  .section [class*="animate-"] {
+    animation-duration: 0.5s !important;
+  }
+  
+  /* Simpler box shadows for better performance */
+  .card, .btn, .progress-bar {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2) !important;
+  }
+  
+  /* Use transform instead of opacity+transform where possible */
+  .section [style*="opacity"] {
+    transition-property: transform !important;
+  }
+  
+  /* Disable parallax effects on mobile */
+  [class*="parallax"], [style*="translateZ"] {
+    transform: none !important;
+  }
+  
+  /* Force hardware acceleration for smoother animations */
+  .section, .navbar, .footer {
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    perspective: 1000px;
+  }
+  
+  /* Simpler animations for video particles on mobile */
+  .particle {
+    display: none !important;
+  }
+  
+  /* Limit particles to just a few on mobile */
+  .particles-container .particle:nth-child(n+6) {
+    display: none !important;
+  }
 }

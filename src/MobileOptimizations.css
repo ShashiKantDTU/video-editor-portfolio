@@ -1,0 +1,68 @@
+/* Mobile Animation Optimizations */
+
+/* General performance tweaks */
+.reduced-motion * {
+  transition-duration: 0.3s !important;
+  animation-duration: 0.5s !important;
+}
+
+/* Disable will-change on mobile for better performance */
+@media (max-width: 768px) {
+  [style*="will-change"] {
+    will-change: auto !important;
+  }
+  
+  /* Optimize scroll reveals */
+  .section > * {
+    transform: none !important;
+    opacity: 1 !important;
+  }
+  
+  /* Remove parallax effects */
+  [style*="translateZ"], [style*="translate3d"] {
+    transform: none !important;
+  }
+  
+  /* Reduce image quality during animations for better performance */
+  body.is-animating img {
+    image-rendering: optimizeSpeed;
+  }
+  
+  /* Eliminate heavy text shadows during animations */
+  body.is-animating h1, 
+  body.is-animating h2 {
+    text-shadow: none !important;
+  }
+  
+  /* Optimize box-shadows for scrolling performance */
+  .card, .btn, .progress-bar {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15) !important;
+  }
+  
+  /* Make scrolling smoother on mobile */
+  html, body {
+    scroll-behavior: auto;
+  }
+  
+  /* Ensure scroll-triggered animations respect reduced motion */
+  [data-animate-on-scroll] {
+    transition: none !important;
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+  
+  /* Remove smooth scrolling for section navigation on mobile */
+  html.reduced-motion {
+    scroll-behavior: auto;
+  }
+  
+  /* Ensure hardware acceleration for critical elements */
+  .navbar, 
+  .section,
+  .hero-content,
+  .portfolio-grid {
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+  }
+} 

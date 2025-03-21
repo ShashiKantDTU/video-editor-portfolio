@@ -1,10 +1,18 @@
 import { motion } from 'framer-motion';
 import { FaPlay } from '@react-icons/all-files/fa/FaPlay';
 import { useEffect, useRef, useState } from 'react';
+import { useAnimation } from '../../AnimationContext';
 import './Hero.css';
 
 // Particle component for background effect
 const Particle = ({ index }) => {
+  const { shouldReduceMotion, isMobile } = useAnimation();
+  
+  // Skip particles on mobile or if reduced motion is preferred
+  if (shouldReduceMotion || isMobile) {
+    return null;
+  }
+  
   const randomSize = Math.random() * 4 + 1;
   const randomDuration = Math.random() * 10 + 15;
   const randomDelay = Math.random() * 5;
@@ -44,6 +52,9 @@ const Particle = ({ index }) => {
 };
 
 const Hero = ({ onHeroVideoLoaded }) => {
+  // Animation context for optimized animations
+  const { transitions, shouldReduceMotion, isMobile } = useAnimation();
+
   // Video state management
   const [activeVideoIndex, setActiveVideoIndex] = useState(0);
   const [videosLoaded, setVideosLoaded] = useState([false, false, false]);
@@ -178,36 +189,40 @@ const Hero = ({ onHeroVideoLoaded }) => {
         
         <div className={`overlay ${videosLoaded[activeVideoIndex] ? 'video-loaded' : ''}`}></div>
         
-        {/* Video indicator dots */}
-        <div className="video-indicators">
-          {videoSources.map((_, index) => (
-            <motion.div
-              key={index}
-              className={`indicator ${activeVideoIndex === index ? 'active' : ''}`}
-              onClick={() => allVideosReady && setActiveVideoIndex(index)}
-              whileHover={{ scale: 1.2 }}
-              whileTap={{ scale: 0.9 }}
-              animate={activeVideoIndex === index ? {
-                scale: [1, 1.2, 1],
-                transition: { repeat: Infinity, repeatDelay: 3 }
-              } : {}}
-            />
-          ))}
-        </div>
+        {/* Video indicator dots - only show if not in reduced motion mode */}
+        {!shouldReduceMotion && (
+          <div className="video-indicators">
+            {videoSources.map((_, index) => (
+              <motion.div
+                key={index}
+                className={`indicator ${activeVideoIndex === index ? 'active' : ''}`}
+                onClick={() => allVideosReady && setActiveVideoIndex(index)}
+                whileHover={{ scale: isMobile ? 1.1 : 1.2 }}
+                whileTap={{ scale: 0.9 }}
+                animate={activeVideoIndex === index && !isMobile ? {
+                  scale: [1, 1.2, 1],
+                  transition: { repeat: Infinity, repeatDelay: 3 }
+                } : {}}
+              />
+            ))}
+          </div>
+        )}
         
-        {/* Particles container */}
-        <div className="particles-container">
-          {particles.map(index => (
-            <Particle key={index} index={index} />
-          ))}
-        </div>
+        {/* Particles container - only show on desktop */}
+        {!isMobile && (
+          <div className="particles-container">
+            {particles.map(index => (
+              <Particle key={index} index={index} />
+            ))}
+          </div>
+        )}
       </div>
       
       <div className="hero-content">
         <motion.h1
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.2 }}
+          transition={{ ...transitions.default, delay: 0.2 }}
           className="hero-title"
         >
           <span className="hero-title-highlight">NKY</span> EDITOR
@@ -216,7 +231,7 @@ const Hero = ({ onHeroVideoLoaded }) => {
         <motion.p
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.4 }}
+          transition={{ ...transitions.default, delay: 0.4 }}
         >
           Crafting Cinematic Stories with Precision and Passion
         </motion.p>
@@ -225,12 +240,12 @@ const Hero = ({ onHeroVideoLoaded }) => {
           className="hero-buttons"
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.6 }}
+          transition={{ ...transitions.default, delay: 0.6 }}
         >
           <motion.a 
             href="#portfolio" 
             className="btn"
-            whileHover={{ scale: 1.05 }}
+            whileHover={{ scale: isMobile ? 1.02 : 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
             <FaPlay className="play-icon" /> Watch My Work
@@ -238,26 +253,29 @@ const Hero = ({ onHeroVideoLoaded }) => {
           <motion.a 
             href="#contact" 
             className="btn btn-outline"
-            whileHover={{ scale: 1.05 }}
+            whileHover={{ scale: isMobile ? 1.02 : 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
             Get In Touch
           </motion.a>
         </motion.div>
         
-        <motion.div
-          className="scroll-down"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1.2, duration: 0.5 }}
-        >
-          <div className="mouse">
-            <div className="wheel"></div>
-          </div>
-          <div>
-            <span className="scroll-text">Scroll Down</span>
-          </div>
-        </motion.div>
+        {/* Only render scroll-down on desktop */}
+        {!isMobile && (
+          <motion.div
+            className="scroll-down"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 1.2, duration: 0.5 }}
+          >
+            <div className="mouse">
+              <div className="wheel"></div>
+            </div>
+            <div>
+              <span className="scroll-text">Scroll Down</span>
+            </div>
+          </motion.div>
+        )}
       </div>
     </section>
   );

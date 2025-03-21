@@ -1,7 +1,8 @@
 import { useState, useEffect, useRef, lazy, Suspense } from 'react'
 // Import only specific features from framer-motion instead of the entire library
-import { motion, AnimatePresence, useScroll } from 'framer-motion'
+import { motion, AnimatePresence, useScroll, useReducedMotion } from 'framer-motion'
 import './App.css'
+import './MobileOptimizations.css'
 import Hero from './components/Hero/Hero'
 // Lazy load components that aren't needed immediately
 const About = lazy(() => import('./components/About/About'))
@@ -19,6 +20,10 @@ function App() {
   const cursorDotRef = useRef(null);
   const { scrollYProgress } = useScroll();
   const heroVideoLoadedRef = useRef(false);
+  // Check if the device is mobile (based on screen width)
+  const isMobile = typeof window !== 'undefined' && window.innerWidth <= 768;
+  // Check for reduced motion preference
+  const prefersReducedMotion = useReducedMotion();
 
   // Handle hero video loaded callback
   const handleHeroVideoLoaded = () => {
@@ -27,6 +32,34 @@ function App() {
     setLoading(false);
   };
 
+  // Apply mobile animation optimizations
+  useEffect(() => {
+    if (isMobile || prefersReducedMotion) {
+      // Add a class to the document for CSS optimizations
+      document.documentElement.classList.add('reduced-motion');
+      
+      // Set CSS variables for animation durations
+      document.documentElement.style.setProperty('--transition-speed', '0.2s');
+      
+      // Disable some animations entirely on mobile
+      const style = document.createElement('style');
+      style.innerHTML = `
+        @media (max-width: 768px) {
+          .particle { display: none !important; }
+          .scroll-down { display: none !important; }
+          [data-framer-motion] { transition: transform 0.2s ease !important; }
+        }
+      `;
+      document.head.appendChild(style);
+      
+      return () => {
+        document.documentElement.classList.remove('reduced-motion');
+        document.documentElement.style.removeProperty('--transition-speed');
+        document.head.removeChild(style);
+      };
+    }
+  }, [isMobile, prefersReducedMotion]);
+
   useEffect(() => {
     // Load essential CSS/JS and show loading screen for minimum 800ms
     // This shorter time prevents seeing loading screen too long on fast connections
@@ -34,14 +67,14 @@ function App() {
       // If video hasn't loaded in 3 seconds, show content anyway
       const maxLoadingTime = setTimeout(() => {
         setLoading(false);
-      }, 2200); // 3 seconds total (800ms + 2200ms)
+      }, isMobile ? 1200 : 2200); // Shorter timeout for mobile
       
       // If hero video loads before timeout, this will be cleaned up
       return () => clearTimeout(maxLoadingTime);
-    }, 800);
+    }, isMobile ? 600 : 800); // Shorter minimum time on mobile
     
     return () => clearTimeout(minLoadingTime);
-  }, []);
+  }, [isMobile]);
 
   // Optimized cursor effect with reduced lag
   useEffect(() => {
@@ -141,11 +174,57 @@ function App() {
           <motion.div 
             className="loader"
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.5 }}
+            transition={{ duration: isMobile ? 0.3 : 0.5 }}
           >
-            <h1>NKY EDITOR</h1>
+            {/* Film countdown */}
+            <div className="countdown">
+              <div className="countdown-number">5</div>
+              <div className="countdown-number">4</div>
+              <div className="countdown-number">3</div>
+              <div className="countdown-number">2</div>
+            </div>
+            
+            {/* Cinematic frame lines */}
+            <div className="loader-frame">
+              <div className="frame-line frame-line-top"></div>
+              <div className="frame-line frame-line-right"></div>
+              <div className="frame-line frame-line-bottom"></div>
+              <div className="frame-line frame-line-left"></div>
+              
+              {/* Corner markers */}
+              <div className="corner-marker top-left"></div>
+              <div className="corner-marker top-right"></div>
+              <div className="corner-marker bottom-left"></div>
+              <div className="corner-marker bottom-right"></div>
+            </div>
+            
+            {/* Aperture animation */}
+            <div className="aperture">
+              <div className="aperture-ring"></div>
+              <div className="aperture-blade"></div>
+              <div className="aperture-blade"></div>
+              <div className="aperture-blade"></div>
+              <div className="aperture-blade"></div>
+              <div className="aperture-blade"></div>
+              <div className="aperture-blade"></div>
+              <div className="aperture-inner"></div>
+            </div>
+            
+            {/* Logo with letter animation */}
+            <div className="loader-logo">
+              <motion.h1>
+                <span>N</span>
+                <span>K</span>
+                <span>Y</span>
+              </motion.h1>
+            </div>
+            
             <div className="loader-progress">
-              <span>Loading resources...</span>
+              <span>
+                {isMobile 
+                  ? "Preparing cinematic experience..." 
+                  : "Initializing professional toolkit..."}
+              </span>
             </div>
           </motion.div>
         ) : (
