@@ -83,51 +83,34 @@ function App() {
     let mouseX = -100; // Start offscreen
     let mouseY = -100;
     let frameId = null;
-    let isLinkHovered = false;
     
-    // Use direct DOM manipulation only - no state updates during movement
-    const animate = () => {
-      if (!cursorRef.current || !cursorDotRef.current) {
-        frameId = requestAnimationFrame(animate);
-        return;
-      }
-      
-      // For cursor dot (faster follow)
-      const dotX = mouseX - 4; // Half of the dot width (8px)
-      const dotY = mouseY - 4;
-      cursorDotRef.current.style.transform = `translate3d(${dotX}px, ${dotY}px, 0)`;
-      
-      // For cursor outline (slower, smoother follow with no damping for better performance)
-      const outlineX = mouseX - 16; // Half of the outline width (32px)
-      const outlineY = mouseY - 16;
-      cursorRef.current.style.transform = `translate3d(${outlineX}px, ${outlineY}px, 0)`;
-      
-      frameId = requestAnimationFrame(animate);
-    };
-    
-    // Start the animation loop
-    frameId = requestAnimationFrame(animate);
-    
-    // Highly optimized mouse move handler - only updates coordinates
-    const updateMousePosition = (e) => {
+    // Ultra-optimized cursor implementation - direct style manipulation
+    const updateCursorPosition = (e) => {
       mouseX = e.clientX;
       mouseY = e.clientY;
+      
+      // Apply position directly without animation frame for immediate response
+      if (cursorDotRef.current) {
+        cursorDotRef.current.style.transform = `translate3d(${mouseX - 4}px, ${mouseY - 4}px, 0)`;
+      }
+      
+      if (cursorRef.current) {
+        cursorRef.current.style.transform = `translate3d(${mouseX - 16}px, ${mouseY - 16}px, 0)`;
+      }
     };
     
     // Process hover states with minimal DOM operations
     const handleLinkHover = () => {
       if (!cursorRef.current) return;
-      isLinkHovered = true;
       cursorRef.current.classList.add("cursor-hover");
     };
     
     const handleLinkLeave = () => {
       if (!cursorRef.current) return;
-      isLinkHovered = false;
       cursorRef.current.classList.remove("cursor-hover");
     };
     
-    // Reduce element selection load by using document delegation where possible
+    // Reduce element selection load by using document delegation
     document.addEventListener('mouseover', (e) => {
       const target = e.target;
       if (
@@ -156,16 +139,17 @@ function App() {
       }
     });
     
-    window.addEventListener('mousemove', updateMousePosition);
+    // Use the more efficient mousemove handler
+    window.addEventListener('mousemove', updateCursorPosition, { passive: true });
     
     // Cleanup
     return () => {
-      cancelAnimationFrame(frameId);
-      window.removeEventListener('mousemove', updateMousePosition);
+      window.removeEventListener('mousemove', updateCursorPosition);
       document.removeEventListener('mouseover', handleLinkHover);
       document.removeEventListener('mouseout', handleLinkLeave);
+      cancelAnimationFrame(frameId);
     };
-  }, [loading]);
+  }, []);
   
   return (
     <div className="app-container">

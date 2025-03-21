@@ -815,7 +815,7 @@ main {
   }
 }
 
-/* Performance-optimized custom cursor styles */
+/* High-performance custom cursor styles */
 .cursor-outer {
   position: fixed;
   width: 32px;
@@ -825,11 +825,12 @@ main {
   pointer-events: none;
   z-index: 9999;
   opacity: 0.6;
-  transform: translateZ(0); /* Hardware acceleration */
+  transform: translate3d(0, 0, 0);
   will-change: transform;
   left: 0;
   top: 0;
-  /* No transitions for the main cursor movement */
+  /* No animation or transition for immediate response */
+  transition: width 0.1s ease-out, height 0.1s ease-out, opacity 0.1s ease-out;
 }
 
 .cursor-dot {
@@ -842,8 +843,9 @@ main {
   z-index: 10000;
   left: 0;
   top: 0;
-  transform: translateZ(0); /* Hardware acceleration */
+  transform: translate3d(0, 0, 0);
   will-change: transform;
+  /* No animation or transition for immediate response */
 }
 
 .cursor-hover {
@@ -851,8 +853,8 @@ main {
   height: 64px;
   opacity: 0.4;
   background-color: rgba(113, 104, 242, 0.1);
-  /* Fast transition only for hover state */
-  transition: width 0.15s ease-out, height 0.15s ease-out, opacity 0.15s ease-out;
+  /* Ultra-fast transition only for hover state */
+  transition: width 0.1s ease-out, height 0.1s ease-out, opacity 0.1s ease-out;
 }
 
 /* Hide default cursor when custom is active */
