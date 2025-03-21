@@ -4,6 +4,9 @@ import { motion, AnimatePresence, useScroll, useReducedMotion } from 'framer-mot
 import './App.css'
 import './MobileOptimizations.css'
 import Hero from './components/Hero/Hero'
+import Clients from './components/Clients/Clients'
+import MobileClients from './components/Clients/MobileClients'
+import clientsData from './components/Clients/clientsData'
 // Lazy load components that aren't needed immediately
 const About = lazy(() => import('./components/About/About'))
 const Services = lazy(() => import('./components/Services/Services'))
@@ -233,6 +236,8 @@ function App() {
             <main>
               <Hero onHeroVideoLoaded={handleHeroVideoLoaded} />
               <Suspense fallback={<div className="section-loading">Loading...</div>}>
+                <Clients />
+                <MobileClients clientsData={clientsData} />
                 <About />
                 <Services />
                 <Portfolio />

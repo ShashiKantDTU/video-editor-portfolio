@@ -5,35 +5,41 @@ import { FaEdit } from '@react-icons/all-files/fa/FaEdit';
 import { FaVideo } from '@react-icons/all-files/fa/FaVideo';
 import { FaStar } from '@react-icons/all-files/fa/FaStar';
 import { FaFilm } from '@react-icons/all-files/fa/FaFilm';
+import { useAnimation } from '../../AnimationContext';
 import './About.css';
 
 const About = () => {
-  // Enhanced animation variants
+  // Use the animation context for mobile awareness
+  const { isMobile, mobileAwareVariants } = useAnimation();
+  
+  // Use mobile-aware animation variants
   const fadeInUp = {
-    initial: { opacity: 0, y: 50 },
+    initial: { opacity: isMobile ? 1 : 0, y: isMobile ? 0 : 50 },
     animate: { opacity: 1, y: 0 },
-    transition: { duration: 0.6 }
+    transition: { duration: isMobile ? 0.3 : 0.6 }
   };
   
-  const containerVariants = {
-    hidden: { opacity: 0 },
+  // Use context variants or fallback to local ones
+  const containerVariants = mobileAwareVariants?.container || {
+    hidden: { opacity: isMobile ? 1 : 0 },
     visible: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.2,
-        delayChildren: 0.3
+        staggerChildren: isMobile ? 0.1 : 0.2,
+        delayChildren: isMobile ? 0.1 : 0.3
       }
     }
   };
   
-  const itemVariants = {
-    hidden: { y: 20, opacity: 0 },
+  const itemVariants = mobileAwareVariants?.item || {
+    hidden: { y: isMobile ? 0 : 20, opacity: isMobile ? 1 : 0 },
     visible: { 
       y: 0, 
       opacity: 1,
       transition: {
         type: "spring",
-        stiffness: 100
+        stiffness: isMobile ? 50 : 100,
+        duration: isMobile ? 0.2 : 0.4
       }
     }
   };
@@ -41,12 +47,12 @@ const About = () => {
   const skillHoverVariants = {
     rest: { scale: 1 },
     hover: { 
-      scale: 1.05, 
-      boxShadow: "0px 10px 30px rgba(0, 0, 0, 0.2)",
+      scale: isMobile ? 1 : 1.05, 
+      boxShadow: isMobile ? "none" : "0px 10px 30px rgba(0, 0, 0, 0.2)",
       backgroundColor: "var(--secondary-color)",
       transition: {
         type: "spring",
-        stiffness: 400,
+        stiffness: isMobile ? 200 : 400,
         damping: 10
       }
     }
@@ -58,22 +64,23 @@ const About = () => {
         <div className="about-content">
           <motion.div 
             className="about-image-container"
-            initial={{ opacity: 0, x: -50 }}
+            initial={{ opacity: isMobile ? 1 : 0, x: isMobile ? 0 : -50 }}
             whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8, type: "spring" }}
+            viewport={{ once: true, amount: 0.1 }}
+            transition={{ duration: isMobile ? 0.4 : 0.8, type: "spring" }}
           >
             <div className="about-image">
               {/* Placeholder for profile image with enhanced effects */}
               <motion.div 
                 className="profile-placeholder"
-                initial={{ filter: "grayscale(100%)" }}
+                initial={{ filter: isMobile ? "grayscale(0%)" : "grayscale(100%)" }}
                 whileInView={{ filter: "grayscale(0%)" }}
-                transition={{ duration: 1.5 }}
+                viewport={{ once: true, amount: 0.1 }}
+                transition={{ duration: isMobile ? 0.5 : 1.5 }}
               >
                 <motion.div
                   className="profile-glow"
-                  animate={{
+                  animate={isMobile ? {} : {
                     boxShadow: ["0 0 10px var(--primary-glow)", "0 0 30px var(--primary-glow)", "0 0 10px var(--primary-glow)"]
                   }}
                   transition={{
@@ -86,14 +93,14 @@ const About = () => {
               
               <motion.div 
                 className="experience-badge"
-                initial={{ scale: 0, rotate: -30 }}
+                initial={{ scale: isMobile ? 1 : 0, rotate: isMobile ? 0 : -30 }}
                 whileInView={{ scale: 1, rotate: 0 }}
-                viewport={{ once: true }}
+                viewport={{ once: true, amount: 0.1 }}
                 transition={{ 
-                  delay: 0.5, 
-                  duration: 0.6, 
+                  delay: isMobile ? 0.1 : 0.5, 
+                  duration: isMobile ? 0.3 : 0.6, 
                   type: "spring",
-                  stiffness: 200,
+                  stiffness: isMobile ? 100 : 200,
                   damping: 10
                 }}
               >
@@ -103,10 +110,10 @@ const About = () => {
               
               <motion.div
                 className="awards-container"
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: isMobile ? 1 : 0, y: isMobile ? 0 : 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: 0.8, duration: 0.6 }}
+                viewport={{ once: true, amount: 0.1 }}
+                transition={{ delay: isMobile ? 0.2 : 0.8, duration: isMobile ? 0.3 : 0.6 }}
               >
                 <div className="award-item">
                   <FaStar /> 50+ Projects
@@ -115,18 +122,18 @@ const About = () => {
               
               <motion.div
                 className="about-stats-mobile"
-                initial={{ opacity: 0, y: 30 }}
+                initial={{ opacity: isMobile ? 1 : 0, y: isMobile ? 0 : 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.8, delay: 0.4, staggerChildren: 0.2 }}
+                viewport={{ once: true, amount: 0.1 }}
+                transition={{ duration: isMobile ? 0.4 : 0.8, delay: isMobile ? 0.1 : 0.4, staggerChildren: isMobile ? 0.1 : 0.2 }}
               >
                 <motion.div 
                   className="stat-card"
-                  whileHover={{ y: -5, boxShadow: "0 12px 25px rgba(0, 0, 0, 0.3)" }}
-                  initial={{ opacity: 0, y: 20 }}
+                  whileHover={{ y: isMobile ? 0 : -5, boxShadow: isMobile ? "none" : "0 12px 25px rgba(0, 0, 0, 0.3)" }}
+                  initial={{ opacity: isMobile ? 1 : 0, y: isMobile ? 0 : 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: 0.5 }}
+                  viewport={{ once: true, amount: 0.1 }}
+                  transition={{ delay: isMobile ? 0.1 : 0.5 }}
                 >
                   <div className="stat-number">5</div>
                   <div className="stat-label">Years<br/>Experience</div>
@@ -134,11 +141,11 @@ const About = () => {
                 
                 <motion.div 
                   className="stat-card"
-                  whileHover={{ y: -5, boxShadow: "0 12px 25px rgba(0, 0, 0, 0.3)" }}
-                  initial={{ opacity: 0, y: 20 }}
+                  whileHover={{ y: isMobile ? 0 : -5, boxShadow: isMobile ? "none" : "0 12px 25px rgba(0, 0, 0, 0.3)" }}
+                  initial={{ opacity: isMobile ? 1 : 0, y: isMobile ? 0 : 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: 0.7 }}
+                  viewport={{ once: true, amount: 0.1 }}
+                  transition={{ delay: isMobile ? 0.2 : 0.7 }}
                 >
                   <div className="stat-number">50+</div>
                   <div className="stat-label">Projects<br/>Completed</div>
@@ -149,12 +156,18 @@ const About = () => {
           
           <motion.div 
             className="about-text"
-            initial={{ opacity: 0, x: 50 }}
+            initial={{ opacity: isMobile ? 1 : 0, x: isMobile ? 0 : 50 }}
             whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8, type: "spring" }}
+            viewport={{ once: true, amount: 0.1 }}
+            transition={{ duration: isMobile ? 0.4 : 0.8, type: "spring" }}
           >
-            <motion.div variants={containerVariants} initial="hidden" whileInView="visible" viewport={{ once: true }}>
+            <motion.div 
+              variants={containerVariants} 
+              initial="hidden" 
+              whileInView="visible" 
+              viewport={{ once: true, amount: 0.1 }}
+              className="about-text-content"
+            >
               <motion.h2 className="section-title" variants={itemVariants}>About Me</motion.h2>
               <motion.h3 className="about-subtitle" variants={itemVariants}>Professional Video Editor</motion.h3>
               <motion.p variants={itemVariants}>
@@ -184,10 +197,10 @@ const About = () => {
                   <p>Skilled in professional editing techniques using industry-standard software to create compelling visual stories.</p>
                   <motion.div 
                     className="skill-progress-bar"
-                    initial={{ width: 0 }}
+                    initial={{ width: isMobile ? "95%" : 0 }}
                     whileInView={{ width: "95%" }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 1, delay: 0.5 }}
+                    viewport={{ once: true, amount: 0.1 }}
+                    transition={{ duration: isMobile ? 0.5 : 1, delay: isMobile ? 0.1 : 0.5 }}
                   />
                 </motion.div>
                 
@@ -205,10 +218,10 @@ const About = () => {
                   <p>Expert in color correction and grading to achieve cinematic looks and enhance visual storytelling.</p>
                   <motion.div 
                     className="skill-progress-bar"
-                    initial={{ width: 0 }}
+                    initial={{ width: isMobile ? "90%" : 0 }}
                     whileInView={{ width: "90%" }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 1, delay: 0.7 }}
+                    viewport={{ once: true, amount: 0.1 }}
+                    transition={{ duration: isMobile ? 0.5 : 1, delay: isMobile ? 0.2 : 0.7 }}
                   />
                 </motion.div>
                 
@@ -226,10 +239,10 @@ const About = () => {
                   <p>Creating engaging motion graphics and visual effects that enhance video projects and captivate audiences.</p>
                   <motion.div 
                     className="skill-progress-bar"
-                    initial={{ width: 0 }}
+                    initial={{ width: isMobile ? "85%" : 0 }}
                     whileInView={{ width: "85%" }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 1, delay: 0.9 }}
+                    viewport={{ once: true, amount: 0.1 }}
+                    transition={{ duration: isMobile ? 0.5 : 1, delay: isMobile ? 0.3 : 0.9 }}
                   />
                 </motion.div>
               </motion.div>
@@ -241,8 +254,8 @@ const About = () => {
                 <motion.a 
                   href="#" 
                   className="btn"
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
+                  whileHover={{ scale: isMobile ? 1 : 1.05 }}
+                  whileTap={{ scale: isMobile ? 0.98 : 0.95 }}
                 >
                   <FaDownload className="download-icon" /> Download Resume
                 </motion.a>

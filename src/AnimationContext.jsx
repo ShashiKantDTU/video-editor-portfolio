@@ -49,13 +49,56 @@ export const AnimationProvider = ({ children }) => {
           fast: { duration: 0.2, ease: 'easeOut' },
           slow: { duration: 0.5, ease: 'easeOut' }
         });
+        
+        // Add a class to the document root to handle mobile animations via CSS
+        document.documentElement.classList.add('mobile-device');
+        
+        // Apply space reservation technique for animation containers
+        reserveSpaceForAnimations();
       } else {
         setTransitions({
           default: { duration: 0.6, ease: 'easeOut' },
           fast: { duration: 0.3, ease: 'easeOut' },
           slow: { duration: 0.9, ease: 'easeInOut' }
         });
+        
+        // Remove mobile class if screen is resized to desktop
+        document.documentElement.classList.remove('mobile-device');
       }
+    };
+    
+    // Function to reserve space for animated elements to prevent layout shift
+    const reserveSpaceForAnimations = () => {
+      // Apply CSS to ensure elements have appropriate space before animation
+      const style = document.createElement('style');
+      style.id = 'animation-space-reservation';
+      style.innerHTML = `
+        /* Mobile animation reservation technique */
+        .about-content, .services-grid, .skill-item, .service-card {
+          min-height: 100px !important;
+          height: auto !important;
+          visibility: visible !important;
+          transform: none !important;
+          position: relative !important;
+          opacity: 1 !important;
+          display: block !important;
+        }
+        
+        /* For Framer Motion variants */
+        [data-framer-motion="hidden"] {
+          visibility: visible !important;
+          opacity: 1 !important;
+          transform: none !important;
+        }
+      `;
+      
+      // Clean up any existing style to avoid duplicates
+      const existingStyle = document.getElementById('animation-space-reservation');
+      if (existingStyle) {
+        existingStyle.remove();
+      }
+      
+      document.head.appendChild(style);
     };
     
     // Check on mount
@@ -65,14 +108,53 @@ export const AnimationProvider = ({ children }) => {
     window.addEventListener('resize', checkDevice);
     
     // Cleanup
-    return () => window.removeEventListener('resize', checkDevice);
+    return () => {
+      window.removeEventListener('resize', checkDevice);
+      document.documentElement.classList.remove('mobile-device');
+      const reservationStyle = document.getElementById('animation-space-reservation');
+      if (reservationStyle) {
+        reservationStyle.remove();
+      }
+    };
   }, [prefersReducedMotion]);
+  
+  // Custom variants that don't affect layout on mobile
+  const mobileAwareVariants = {
+    // For container elements
+    container: {
+      hidden: { opacity: isMobile ? 1 : 0 },
+      visible: { 
+        opacity: 1, 
+        transition: { 
+          staggerChildren: isMobile ? 0.1 : 0.2,
+          delayChildren: isMobile ? 0.1 : 0.3
+        } 
+      }
+    },
+    // For individual items
+    item: {
+      hidden: { 
+        opacity: isMobile ? 1 : 0, 
+        y: isMobile ? 0 : 20 
+      },
+      visible: { 
+        opacity: 1, 
+        y: 0,
+        transition: {
+          type: "spring",
+          stiffness: isMobile ? 50 : 100,
+          duration: isMobile ? 0.2 : 0.4
+        }
+      }
+    }
+  };
   
   // Context value
   const value = {
     shouldReduceMotion,
     transitions,
-    isMobile
+    isMobile,
+    mobileAwareVariants
   };
   
   return (

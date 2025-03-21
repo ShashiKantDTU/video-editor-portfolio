@@ -288,6 +288,11 @@
   }
 }
 
+/* Redesigned stats container for mobile - hidden by default on desktop */
+.about-stats-mobile {
+  display: none;
+}
+
 /* Mobile Responsive Styles */
 @media (max-width: 768px) {
   .about {
@@ -313,7 +318,7 @@
     position: relative;
   }
 
-  /* Redesigned stats container for mobile */
+  /* Show mobile stats on small screens */
   .about-stats-mobile {
     display: flex;
     flex-wrap: wrap;

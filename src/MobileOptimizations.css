@@ -65,4 +65,100 @@
     -webkit-backface-visibility: hidden;
     backface-visibility: hidden;
   }
+  
+  /* ===== NEW FIXES FOR ANIMATION LAYOUT SHIFT ===== */
+  
+  /* Force minimum height for sections to prevent layout shift */
+  #about.section {
+    min-height: 1200px; /* Reserve space for About section */
+  }
+  
+  #services.section {
+    min-height: 1600px; /* Reserve space for Services section */
+  }
+  
+  /* Ensure elements have pre-defined dimensions before animations */
+  .about-content, 
+  .services-grid,
+  .service-card,
+  .skill-item,
+  .cta-container {
+    min-height: 100px;
+    visibility: visible !important;
+    opacity: 1 !important;
+    height: auto !important;
+  }
+  
+  /* Force elements to take up space immediately regardless of animation state */
+  .section [class*="animate-"],
+  .section [style*="opacity: 0"],
+  .section [style*="transform"],
+  motion-div {
+    position: relative !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    height: auto !important;
+    display: block !important;
+    transform: none !important;
+  }
+  
+  /* Fix for motion divs that might be controlling visibility */
+  motion-div,
+  div[style*="opacity: 0"],
+  div[style*="transform: translateY"],
+  div[style*="opacity"] {
+    height: auto !important;
+    min-height: inherit;
+    position: relative !important;
+    top: auto !important;
+    left: auto !important;
+  }
+  
+  /* Fix for Framer Motion default behavior */
+  .framer-motion-div,
+  [data-framer-motion] {
+    position: relative !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+  
+  /* Specifically target About and Services components */
+  .about .skill-item,
+  .services .service-card {
+    visibility: visible !important;
+    opacity: 1 !important;
+    transform: none !important;
+    position: relative !important;
+    height: auto !important;
+    min-height: 200px;
+  }
+  
+  /* Fix for container variants in Framer Motion that might hide child elements */
+  .about-text > div,
+  .services-grid {
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+  
+  /* Fix for specific cards in services section */
+  .services .service-card {
+    height: 100% !important;
+    min-height: 320px !important;
+  }
+}
+
+/* Additional fixes for very small screens */
+@media (max-width: 480px) {
+  #about.section {
+    min-height: 1600px; /* More space for stacked elements on small screens */
+  }
+  
+  #services.section {
+    min-height: 2200px; /* More space for stacked service cards */
+  }
+  
+  .services .service-card {
+    min-height: 280px !important;
+  }
 } 
