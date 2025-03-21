@@ -254,5 +254,27 @@
   
   .modal-content {
     max-width: 95%;
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+  
+  .close-modal {
+    top: 10px;
+    right: 10px;
+    width: 30px;
+    height: 30px;
+    font-size: 0.9rem;
+  }
+  
+  .video-container {
+    padding-bottom: 56.25%; /* Maintain 16:9 aspect ratio */
+  }
+  
+  .video-info {
+    padding: 15px;
+  }
+  
+  .video-info h3 {
+    font-size: 1.2rem;
   }
 } 

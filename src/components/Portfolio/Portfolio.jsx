@@ -144,6 +144,13 @@ const Portfolio = () => {
                 key={project.id}
                 className="portfolio-item"
                 onClick={() => openVideoModal(project)}
+                onTouchEnd={(e) => {
+                  e.preventDefault();
+                  openVideoModal(project);
+                }}
+                role="button"
+                tabIndex={0}
+                aria-label={`Open ${project.title} video`}
               >
                 <div className={`portfolio-thumbnail ${project.thumbnail}`}>
                   <div className="portfolio-overlay">
@@ -184,9 +191,10 @@ const Portfolio = () => {
               </button>
               <div className="video-container">
                 <iframe
-                  src={selectedVideo.videoUrl}
+                  src={`${selectedVideo.videoUrl}?autoplay=1&rel=0&modestbranding=1&enablejsapi=1`}
                   title={selectedVideo.title}
                   allowFullScreen
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                 ></iframe>
               </div>
               <div className="video-info">
