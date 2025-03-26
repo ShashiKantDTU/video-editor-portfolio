@@ -90,6 +90,23 @@ export const AnimationProvider = ({ children }) => {
           opacity: 1 !important;
           transform: none !important;
         }
+        
+        /* Ensure portfolio items display properly */
+        .portfolio-item {
+          opacity: 1 !important;
+          transform: none !important;
+          transition: box-shadow 0.3s ease !important;
+        }
+        
+        /* Simplify hover effects for mobile */
+        .portfolio-overlay {
+          opacity: 1 !important;
+        }
+        
+        .play-icon {
+          opacity: 1 !important;
+          transform: scale(1) !important;
+        }
       `;
       
       // Clean up any existing style to avoid duplicates

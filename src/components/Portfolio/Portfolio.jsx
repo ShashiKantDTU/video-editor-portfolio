@@ -2,12 +2,30 @@ import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FaPlay } from '@react-icons/all-files/fa/FaPlay';
 import { FaTimes } from '@react-icons/all-files/fa/FaTimes';
+import { useAnimation } from '../../AnimationContext';
 import './Portfolio.css';
 
 const Portfolio = () => {
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [selectedVideo, setSelectedVideo] = useState(null);
   const [filteredProjects, setFilteredProjects] = useState([]);
+  const [isMobileDevice, setIsMobileDevice] = useState(false);
+  const { isMobile } = useAnimation();
+  
+  // Check if device is mobile for video handling
+  useEffect(() => {
+    const checkMobile = () => {
+      const mobile = window.innerWidth <= 768;
+      setIsMobileDevice(mobile);
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    
+    return () => {
+      window.removeEventListener('resize', checkMobile);
+    };
+  }, []);
   
   // Portfolio projects data
   const portfolioProjects = [
@@ -16,7 +34,8 @@ const Portfolio = () => {
       title: 'Corporate Brand Video',
       category: 'commercial',
       thumbnail: 'commercial-placeholder',
-      videoUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
+      videoUrl: 'https://player.vimeo.com/video/76979871', // Vimeo embed URL
+      youtubeUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ', // Keeping YouTube as fallback
       client: 'Tech Solutions Inc.',
       description: 'Professional editing for a corporate brand story showcasing company values.'
     },
@@ -25,7 +44,8 @@ const Portfolio = () => {
       title: 'Wedding Highlight Reel',
       category: 'personal',
       thumbnail: 'wedding-placeholder',
-      videoUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
+      videoUrl: 'https://player.vimeo.com/video/305250252',
+      youtubeUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
       client: 'Sarah & Mike',
       description: 'Cinematic edit of wedding footage with color grading and audio enhancement.'
     },
@@ -34,7 +54,8 @@ const Portfolio = () => {
       title: 'Music Video Edit',
       category: 'creative',
       thumbnail: 'event-placeholder',
-      videoUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
+      videoUrl: 'https://player.vimeo.com/video/347119375',
+      youtubeUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
       client: 'Indie Artist',
       description: 'Creative editing with visual effects and rhythm-based cuts for a music video.'
     },
@@ -43,7 +64,8 @@ const Portfolio = () => {
       title: 'Product Launch Video',
       category: 'commercial',
       thumbnail: 'commercial-placeholder-2',
-      videoUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
+      videoUrl: 'https://player.vimeo.com/video/225408543',
+      youtubeUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
       client: 'NextGen Devices',
       description: 'Fast-paced promotional video edit with motion graphics for a product launch.'
     },
@@ -52,7 +74,8 @@ const Portfolio = () => {
       title: 'Travel Montage',
       category: 'personal',
       thumbnail: 'documentary-placeholder',
-      videoUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
+      videoUrl: 'https://player.vimeo.com/video/222287552',
+      youtubeUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
       client: 'Travel Influencer',
       description: 'Engaging travel montage with seamless transitions and color grading.'
     },
@@ -61,7 +84,8 @@ const Portfolio = () => {
       title: 'Tutorial Series',
       category: 'educational',
       thumbnail: 'event-placeholder-2',
-      videoUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
+      videoUrl: 'https://player.vimeo.com/video/355601330',
+      youtubeUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
       client: 'Online Learning Platform',
       description: 'Educational content editing with clear structure and engaging graphics.'
     }
@@ -97,12 +121,24 @@ const Portfolio = () => {
     document.body.style.overflow = 'auto';
   };
   
+  // Handle direct video playback for mobile
+  const handleVideoClick = (e, project) => {
+    if (isMobileDevice) {
+      // For mobile, open in a new tab directly
+      e.stopPropagation();
+      window.open(project.youtubeUrl.replace('embed/', 'watch?v='), '_blank');
+    } else {
+      // For desktop, open the modal
+      openVideoModal(project);
+    }
+  };
+  
   return (
     <section id="portfolio" className="section portfolio">
       <div className="container">
         <motion.div 
           className="section-header text-center"
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: isMobile ? 1 : 0, y: isMobile ? 0 : 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
@@ -113,7 +149,7 @@ const Portfolio = () => {
         
         <motion.div 
           className="portfolio-filter"
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: isMobile ? 1 : 0, y: isMobile ? 0 : 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
@@ -137,24 +173,20 @@ const Portfolio = () => {
             {filteredProjects.map((project) => (
               <motion.div
                 layout
-                initial={{ opacity: 0, scale: 0.8 }}
+                initial={{ opacity: isMobile ? 1 : 0, scale: isMobile ? 1 : 0.8 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.8 }}
-                transition={{ duration: 0.5 }}
+                transition={{ duration: isMobile ? 0.3 : 0.5 }}
                 key={project.id}
                 className="portfolio-item"
-                onClick={() => openVideoModal(project)}
-                onTouchEnd={(e) => {
-                  e.preventDefault();
-                  openVideoModal(project);
-                }}
-                role="button"
-                tabIndex={0}
-                aria-label={`Open ${project.title} video`}
+                onClick={() => !isMobileDevice && openVideoModal(project)}
               >
                 <div className={`portfolio-thumbnail ${project.thumbnail}`}>
                   <div className="portfolio-overlay">
-                    <span className="play-icon">
+                    <span 
+                      className="play-icon"
+                      onClick={(e) => handleVideoClick(e, project)}
+                    >
                       <FaPlay />
                     </span>
                   </div>
@@ -169,9 +201,9 @@ const Portfolio = () => {
         </motion.div>
       </div>
       
-      {/* Video Modal */}
+      {/* Video Modal - Only render on desktop */}
       <AnimatePresence>
-        {selectedVideo && (
+        {selectedVideo && !isMobileDevice && (
           <motion.div
             className="video-modal"
             initial={{ opacity: 0 }}
@@ -191,10 +223,12 @@ const Portfolio = () => {
               </button>
               <div className="video-container">
                 <iframe
-                  src={`${selectedVideo.videoUrl}?autoplay=1&rel=0&modestbranding=1&enablejsapi=1`}
+                  src={selectedVideo.videoUrl}
                   title={selectedVideo.title}
+                  frameBorder="0"
+                  allow="autoplay; fullscreen; picture-in-picture"
                   allowFullScreen
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  loading="lazy"
                 ></iframe>
               </div>
               <div className="video-info">

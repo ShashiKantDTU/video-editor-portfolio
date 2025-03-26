@@ -153,7 +153,7 @@ function App() {
       cancelAnimationFrame(frameId);
     };
   }, []);
-  
+
   return (
     <div className="app-container">
       <AnimatePresence>
@@ -204,7 +204,7 @@ function App() {
                 <span>K</span>
                 <span>Y</span>
               </motion.h1>
-            </div>
+      </div>
             
             <div className="loader-progress">
               <span>
@@ -212,7 +212,7 @@ function App() {
                   ? "Preparing cinematic experience..." 
                   : "Initializing professional toolkit..."}
               </span>
-            </div>
+      </div>
           </motion.div>
         ) : (
           <>
